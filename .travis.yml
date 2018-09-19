@@ -1,0 +1,48 @@
+dist: trusty
+sudo: false
+
+language: node_js
+node_js:
+- "8"
+
+addons:
+  apt:
+    sources:
+    - google-chrome
+    packages:
+    - google-chrome-stable
+
+cache:
+  directories:
+  - ./node_modules
+
+install:
+- npm install
+
+script:
+- npm run test -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+- npm run e2e -- --protractor-config=./e2e/protractor-ci.conf.js
+  Commit your changes and push them to your repository.
+
+  Next you'll need to sign up for Travis CI and add your project. You'll need to push a new commit to trigger a build.
+
+  Be sure to check out the Travis CI docs if you want to know more.
+
+  ChromeDriver
+  In CI environments it's a good idea to to use a specific version of ChromeDriver instead of allowing ng e2e to use the latest one. CI environments often use older versions of chrome, which are unsupported by newer versions of ChromeDriver.
+
+An easy way to do this is to define a NPM script:
+
+"webdriver-update-ci": "webdriver-manager update --standalone false --gecko false --versions.chrome 2.37"
+And then on CI environments you call that script followed by the e2e command without updating webdriver:
+
+  npm run webdriver-update-ci
+  ng e2e --webdriver-update=false
+  This way you will always use a specific version of chrome driver between runs.
+
+  Pages 126
+  Angular CLI
+  Generate
+  Stories
+  Angular CLI 1.x wiki
+  Clone this wiki locally
